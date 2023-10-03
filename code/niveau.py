@@ -20,9 +20,9 @@ class Niveau:
                 x = index_colonne * tilesize
                 y = index_ligne * tilesize
                 if colonne == 'x':
-                    Tiles((x, y), [self.sprites_visible])
+                    Tiles((x, y), [self.sprites_visible, self.sprites_barriere])
                 if colonne == 'p':
-                    Player()
+                    Perso((x, y), [self.sprites_visible])
 
     def run(self):
         self.sprites_visible.draw(self.affiche_surface)
