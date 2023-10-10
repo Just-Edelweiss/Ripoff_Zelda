@@ -1,4 +1,7 @@
+from typing import List, Optional
 import pygame as pyg
+from pygame.rect import Rect
+from pygame.surface import Surface
 from parametre import *
 from tile import *
 from personnage import *
@@ -7,10 +10,9 @@ from personnage import *
 
 class Niveau:
     def __init__(self):
-        self.affiche_surface = pyg.display.get_surface()
-
+        
         # groupe de sprite visible et les barriere pour la map
-        self.sprites_visible = pyg.sprite.Group()
+        self.sprites_visible = YSortCameraGroup()
         self.sprites_barriere = pyg.sprite.Group()
         self.create_map()
 
@@ -22,10 +24,21 @@ class Niveau:
                 if colonne == 'x':
                     Tiles((x, y), [self.sprites_visible, self.sprites_barriere])
                 if colonne == 'p':
-                    self.perso = Perso((x, y), [self.sprites_visible])
+                    self.perso = Perso((x, y), [self.sprites_visible], self.sprites_barriere)
 
     def run(self):
-        self.sprites_visible.draw(self.affiche_surface)
+        self.sprites_visible.draw_custom()
         self.sprites_visible.update()
+
+
+class YSortCameraGroup(pyg.sprite.Group):
+    def __init__(self):
+
+        super().__init__()
+        self.affiche_surface = pyg.display.get_surface()
+
+    def draw_custom(self):
+        for sprite in sorted(self.sprites(), key= lambda sprite: sprite.rect.centery):
+            self.affiche_surface.blit(sprite.image, sprite.rect)
         
 
