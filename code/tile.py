@@ -1,9 +1,10 @@
 import pygame as pyg
 from parametre import *
 
-class Tiles(pyg.sprite.Sprite):
-    def __init__(self, pos, groups):
+class Tile(pyg.sprite.Sprite):
+    def __init__(self, pos, groups, sprite_type, surface = pyg.Surface((tilesize, tilesize))):
         super().__init__(groups)
-        self.image = pyg.image.load('assets\Arbre.png').convert_alpha()
+        self.sprite_type = sprite_type
+        self.image = surface
         self.rect = self.image.get_rect(topleft = pos)
         self.hitbox = self.rect.inflate(0, -10)

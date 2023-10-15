@@ -5,7 +5,7 @@ from pygame.surface import Surface
 from parametre import *
 from tile import *
 from personnage import *
-
+from support import *
 
 
 class Niveau:
@@ -17,14 +17,27 @@ class Niveau:
         self.create_map()
 
     def create_map(self):
-        """        for index_ligne, ligne in enumerate(map):
-            for index_colonne, colonne in enumerate(ligne):
-                x = index_colonne * tilesize
-                y = index_ligne * tilesize
-                if colonne == 'x':
-                    Tiles((x, y), [self.sprites_visible, self.sprites_barriere])
+        layouts = {
+            'barrier_limite': import_csv_layout('assets/map/Zeldouille_map._barrier.csv')
+        }
+
+        for style, layout in layouts.items():    
+            for index_ligne, ligne in enumerate(layout):
+                for index_colonne, colonne in enumerate(ligne):
+                    if colonne != '-1':
+                        x = index_colonne * tilesize
+                        y = index_ligne * tilesize
+                if style == 'barrier_limite':
+                    Tile((x, y), [self.sprites_visible, self.sprites_barriere], 'invisible')
+
+
+
+                """if colonne == 'x':
+                    Tile((x, y), [self.sprites_visible, self.sprites_barriere])
                 if colonne == 'p':
                     self.perso = Perso((x, y), [self.sprites_visible], self.sprites_barriere)"""
+                
+                
         self.perso = Perso((448, 96), [self.sprites_visible], self.sprites_barriere)
 
     def run(self):
