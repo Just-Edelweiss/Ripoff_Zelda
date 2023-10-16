@@ -6,6 +6,7 @@ from parametre import *
 from tile import *
 from personnage import *
 from support import *
+from random import choice
 
 
 class Niveau:
@@ -18,7 +19,13 @@ class Niveau:
 
     def create_map(self):
         layouts = {
-            'barrier_limite': import_csv_layout('assets/map/Zeldouille_map._barrier.csv')
+            'barrier_limite': import_csv_layout('assets/map/Zeldouille_map_barrier.csv'),
+            'cassable' : import_csv_layout('assets/map/Zeldouille_map_cassable.csv'),
+            'objet' : import_csv_layout('assets/map/Zeldouille_map_objet.csv'),
+        }
+        graphics = {
+            'herbe' : import_fichier('assets/herbe'),
+            'objets' : import_fichier('assets/objet')
         }
 
         for style, layout in layouts.items():    
@@ -27,9 +34,14 @@ class Niveau:
                     if colonne != '-1':
                         x = index_colonne * tilesize
                         y = index_ligne * tilesize
-                if style == 'barrier_limite':
-                    Tile((x, y), [self.sprites_visible, self.sprites_barriere], 'invisible')
-
+                        if style == 'barrier_limite':
+                            Tile((x, y), [self.sprites_barriere], 'invisible')
+                        if style == 'cassable':
+                            random_grass_image = choice(graphics['herbe'])
+                            Tile((x, y), [self.sprites_visible, self.sprites_barriere], 'grass', random_grass_image)
+                        if style == 'objet':
+                            surf = graphics['objets'][int(colonne)]
+                            Tile((x, y), [self.sprites_visible, self.sprites_barriere], 'objet', surf)
 
 
                 """if colonne == 'x':
