@@ -1,5 +1,6 @@
 import pygame as pyg
 from parametre import *
+from support import import_fichier
 
 class Perso(pyg.sprite.Sprite):
     def __init__(self, pos, groups, sprites_barriere):
@@ -9,12 +10,15 @@ class Perso(pyg.sprite.Sprite):
         self.hitbox = self.rect.inflate(-24, 0)
 
         self.import_player_assets()
+        self.status = 'down'
+        self.frame_index = 0
+        self.animation_speed = 0.15
 
         self.direction = pyg.math.Vector2()
         self.speed = 5
 
         self.attaque = False
-        self.attaque_cooldown = 400 # in millisecond
+        self.attaque_cooldown = 400 # en millisecond
         self.attaque_time = None
 
         self.sprites_barriere = sprites_barriere
@@ -26,7 +30,8 @@ class Perso(pyg.sprite.Sprite):
         }
 
         for animation in self.animations.keys():
-            print(animation)
+            full_path = chemin_perso + animation
+            self.animations[animation] = import_fichier(full_path)
 
     def input(self):
         keys = pyg.key.get_pressed()
@@ -49,6 +54,25 @@ class Perso(pyg.sprite.Sprite):
             self.attaque = True
             self.attaque_time = pyg.time.get_ticks()
             print('attaque')
+
+    def get_status(self):
+
+		# idle
+        if self.direction.x == 0 and self.direction.y == 0:
+            if not 'idle' in self.status and not 'attack' in self.status:
+                self.status = self.status + '_idle'
+
+        if self.attacking:
+            self.direction.x = 0
+            self.direction.y = 0
+            if not 'attack' in self.status:
+                if 'idle' in self.status:
+                    self.status = self.status.replace('_idle','_attack')
+                else:
+                    self.status = self.status + '_attack'
+        else:
+            if 'attack' in self.status:
+                self.status = self.status.replace('_attack','')
 
     def deplacement(self, speed):
         if self.direction.magnitude() != 0:
@@ -85,6 +109,19 @@ class Perso(pyg.sprite.Sprite):
             if temps_acctuel - self.attaque_time >= self.attaque_cooldown:
                 self.attaque = False
 
+    def animate(self):
+	    animations = self.animations[self.status]
+ 
+        self.frame_index += self.animation_speed
+        if self.frame_index >= len(animation):
+            self.frame_index = 0
+
+        self.image = animation[int(self.frame_index)]
+        self.rect = self.image.get_rect(center = self.hitbox.center)
+
     def update(self):
         self.input()
+        self.cooldowns()
+        self.get_status()
+        self.animate()
         self.deplacement(self.speed)
