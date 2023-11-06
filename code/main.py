@@ -4,7 +4,7 @@ from personnage import *
 from item import *
 from niveau import Niveau
 from parametre import *
-from DialogBox import *
+
 
 class Game:
     def __init__(self):
@@ -13,7 +13,7 @@ class Game:
         self.clock = pyg.time.Clock()
 
         self.niveau = Niveau()
-        self.boite_dialog = DialogBox()
+
         pyg.display.set_caption("Zeldouille")
 
     def run(self):
@@ -26,9 +26,7 @@ class Game:
 
             self.screen.fill('black')
             self.niveau.run()
-            self.boite_dialog.affiche_boite(self.screen)
             pyg.display.update()
-            
             self.clock.tick(fps)
 
 
