@@ -1,14 +1,10 @@
 from typing import List, Optional
 import pygame as pyg
-from pygame.rect import Rect
-from pygame.surface import Surface
 from parametre import *
 from tile import *
 from personnage import *
 from support import *
 from random import choice
-
-
 
 class Niveau:
     def __init__(self):
@@ -17,7 +13,6 @@ class Niveau:
         self.sprites_visible = YSortCameraGroup()
         self.sprites_barriere = pyg.sprite.Group()
         self.create_map()
-
 
     def create_map(self):
         layouts = {
@@ -41,23 +36,17 @@ class Niveau:
                         if style == 'cassable':
                             random_grass_image = choice(graphics['herbe'])
                             Tile((x, y), [self.sprites_visible, self.sprites_barriere], 'grass', random_grass_image)
+
+                            # module pour faire apparitre les arbre
                         """if style == 'objet':
                             surf = graphics['objets'][int(colonne)]
-                            Tile((x, y), [self.sprites_visible, self.sprites_barriere], 'objet', surf)
-"""
-
-                """if colonne == 'x':
-                    Tile((x, y), [self.sprites_visible, self.sprites_barriere])
-                if colonne == 'p':
-                    self.perso = Perso((x, y), [self.sprites_visible], self.sprites_barriere)"""
-                
-                
+                            Tile((x, y), [self.sprites_visible, self.sprites_barriere], 'objet', surf)"""
+                                    
         self.perso = Perso((448, 96), [self.sprites_visible], self.sprites_barriere)
 
     def run(self):
         self.sprites_visible.draw_custom()
         self.sprites_visible.update()
-
 
 
 class YSortCameraGroup(pyg.sprite.Group):
